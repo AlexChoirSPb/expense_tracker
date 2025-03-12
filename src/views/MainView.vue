@@ -6,12 +6,11 @@ import IncomeExpense from '@/components/IncomeExpense.vue'
 import TotalBalance from '@/components/TotalBalance.vue'
 import TransactionList from '@/components/TransactionList.vue'
 import generateUUID from '@/helpers/uuidGenerate'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth.js'
 import { computed, onMounted, provide, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
-
 const authStore = useAuthStore()
 
 const transactionList = ref([])
@@ -85,12 +84,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <AppHeader />
-
-  <div class="container">
-    <TotalBalance :total="+total" />
-    <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
-    <AddTransaction @addTransaction="addTransaction" />
-    <TransactionList :transactions="transactionList" @deleteTransaction="deleteTransaction" />
+  <div class="page">
+    <AppHeader />
+    <div class="content">
+      <TotalBalance :total="+total" />
+      <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
+      <AddTransaction @addTransaction="addTransaction" />
+      <div class="scrollable-content">
+        <TransactionList :transactions="transactionList" @deleteTransaction="deleteTransaction" />
+      </div>
+    </div>
   </div>
 </template>

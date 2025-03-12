@@ -1,14 +1,28 @@
 <script setup>
+import { validateEmail, validatePassword } from '@/helpers/validators'
 import { inject, ref } from 'vue'
 const { loading } = inject('sign')
+import { useToast } from 'vue-toastification'
 
-console.log('ПРивет!')
-
+const toast = useToast()
 const emit = defineEmits(['submitForm'])
 
 const email = ref('')
 const password = ref('')
 function signIn() {
+  if (!validateEmail(email.value)) {
+    toast.error('Введите корректный email!', { timeout: 2000 })
+    return
+  }
+
+  if (!validatePassword(password.value)) {
+    toast.error(
+      'Пароль должен быть минимум 8 симоволов, содержать одну заглавную букву и одну цифру',
+      { timeout: 3500 },
+    )
+    return
+  }
+
   let payload = {
     email: email.value,
     password: password.value,
@@ -17,9 +31,9 @@ function signIn() {
 }
 </script>
 <template>
-  <form id="form" @submit.prevent="signIn">
+  <form class="auth-form" @submit.prevent="signIn">
     <div class="form-control">
-      <label for="login">Почта</label>
+      <label class="form-control__label" for="login">Почта</label>
       <input
         type="text"
         id="login"
@@ -30,7 +44,7 @@ function signIn() {
       />
     </div>
     <div class="form-control">
-      <label for="password">Пароль</label>
+      <label class="form-control__label" for="password">Пароль</label>
       <input
         type="password"
         id="password"
@@ -40,6 +54,13 @@ function signIn() {
         :disabled="loading"
       />
     </div>
-    <button class="btn" :disabled="loading">Войти</button>
+    <button class="button" :disabled="loading">Войти</button>
   </form>
 </template>
+<style scoped lang="scss">
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+</style>

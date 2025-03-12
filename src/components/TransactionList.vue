@@ -1,18 +1,21 @@
 <template>
-  <h3>История</h3>
-  <TransitionGroup name="list" tag="ul" class="list" v-if="transactions.length > 0">
-    <li
-      v-for="transaction in transactions"
-      :key="transaction.id"
-      :class="transaction.amount > 0 ? 'plus' : 'minus'"
-    >
-      {{ transaction.text }} <span>{{ transaction.amount }} &#8381;</span
-      ><button class="delete-btn" @click="deleteTransaction(transaction.id)">x</button>
-    </li>
-  </TransitionGroup>
-  <div class="text" v-else>Записей пока нет!</div>
+  <div class="transactions">
+    <h3 class="transactions__title">История</h3>
+    <TransitionGroup name="list" tag="ul" class="transactions__list" v-if="transactions.length > 0">
+      <TransactionItem
+        class="transactions__list-item"
+        v-for="transaction in transactions"
+        :key="transaction.id"
+        :transaction="transaction"
+        @deleteTransaction="deleteTransaction"
+      ></TransactionItem>
+    </TransitionGroup>
+    <div class="text" v-else>Записей пока нет!</div>
+  </div>
 </template>
 <script setup>
+import TransactionItem from './TransactionItem.vue'
+
 defineProps({
   transactions: {
     type: Array,
@@ -25,7 +28,10 @@ function deleteTransaction(id) {
   emits('deleteTransaction', id)
 }
 </script>
-<style>
+<style scoped lang="scss">
+@use '@/assets/scss/components/TransactionList';
+@use '@/assets/scss/components/Transaction';
+
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;

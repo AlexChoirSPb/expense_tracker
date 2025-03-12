@@ -1,12 +1,12 @@
 <template>
-  <div class="inc-exp-container">
-    <div>
-      <h4>Пополнения</h4>
-      <p id="money-plus" class="money plus">{{ income }} &#8381;</p>
+  <div class="inc-exp">
+    <div class="inc-exp__item">
+      <h3 class="inc-exp__title">Пополнения</h3>
+      <div class="inc-exp__value inc-exp__value--income text">{{ income }} &#8381;</div>
     </div>
-    <div>
-      <h4>Расходы</h4>
-      <p id="money-minus" class="money minus">{{ expense }} &#8381;</p>
+    <div class="inc-exp__item">
+      <h3 class="inc-exp__title">Расходы</h3>
+      <div class="inc-exp__value inc-exp__value--expense text">{{ expense }} &#8381;</div>
     </div>
   </div>
 </template>
@@ -22,3 +22,6 @@ defineProps({
   },
 })
 </script>
+<style scoped lang="scss">
+@use '@/assets/scss/components/IncomeExpense';
+</style>

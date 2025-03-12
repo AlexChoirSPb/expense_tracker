@@ -1,12 +1,39 @@
 <script setup>
+import { validateEmail, validatePassword } from '@/helpers/validators'
 import { ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const emit = defineEmits(['submitForm'])
 
 const email = ref('')
 const password = ref('')
+const repeatPassword = ref('')
 const name = ref('')
 function signUp() {
+  if (!validateEmail(email.value)) {
+    toast.error('Введите корректный email!', { timeout: 2000 })
+    return
+  }
+
+  if (!validatePassword(password.value)) {
+    toast.error(
+      'Пароль должен быть минимум 8 симоволов, содержать одну заглавную букву и одну цифру',
+      { timeout: 3500 },
+    )
+    return
+  }
+
+  if (password.value !== repeatPassword.value) {
+    toast.error('Пароли не совпадают!', { timeout: 2000 })
+    return
+  }
+
+  if (!name.value) {
+    toast.error('Укажите ваше имя', { timeout: 2000 })
+    return
+  }
+
   let payload = {
     email: email.value,
     password: password.value,
@@ -16,9 +43,9 @@ function signUp() {
 }
 </script>
 <template>
-  <form id="form" @submit.prevent="signUp">
+  <form class="auth-form" @submit.prevent="signUp">
     <div class="form-control">
-      <label for="login">Email</label>
+      <label class="form-control__label" for="login">Email</label>
       <input
         type="text"
         id="login"
@@ -28,7 +55,7 @@ function signUp() {
       />
     </div>
     <div class="form-control">
-      <label for="password">Пароль</label>
+      <label class="form-control__label" for="password">Пароль</label>
       <input
         type="password"
         id="password"
@@ -38,16 +65,17 @@ function signUp() {
       />
     </div>
     <div class="form-control">
-      <label for="repeatPassword">Повторите пароль</label>
+      <label class="form-control__label" for="repeatPassword">Повторите пароль</label>
       <input
         type="password"
         id="repeatPassword"
         placeholder="Повторите пароль"
         autocomplete="new-password"
+        v-model="repeatPassword"
       />
     </div>
     <div class="form-control">
-      <label for="name">Ваше имя</label>
+      <label class="form-control__label" for="name">Ваше имя</label>
       <input
         type="text"
         id="name"
@@ -56,6 +84,13 @@ function signUp() {
         v-model="name"
       />
     </div>
-    <button class="btn">Зарегистрироваться</button>
+    <button class="button">Зарегистрироваться</button>
   </form>
 </template>
+<style scoped lang="scss">
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+</style>

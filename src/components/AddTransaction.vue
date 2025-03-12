@@ -1,33 +1,33 @@
 <template>
-  <h3>Добавить новую операцию</h3>
-  <form id="form" @submit.prevent="submitForm">
-    <div class="form-control">
-      <label for="text">Текст</label>
-      <input
-        type="text"
-        id="text"
-        placeholder="Введите описание операции"
-        v-model="text"
-        :disabled="loading"
-      />
-    </div>
-    <div class="form-control">
-      <label for="amount">
-        Сумма <br />
-        <span class="amount-description">
+  <div class="add-transaction">
+    <h3 class="add-transaction__title">Добавить новую операцию</h3>
+    <form class="add-transaction__form" @submit.prevent="submitForm">
+      <div class="form-control">
+        <label class="form-control__label" for="text">Текст</label>
+        <input
+          type="text"
+          id="text"
+          placeholder="Введите описание операции"
+          v-model="text"
+          :disabled="loading"
+        />
+      </div>
+      <div class="form-control">
+        <label class="form-control__label" for="amount"> Сумма </label>
+        <span class="form-control__description">
           (отрицательная - расход, положительная - пополнение)
         </span>
-      </label>
-      <input
-        type="number"
-        id="amount"
-        placeholder="Введите сумму"
-        v-model="amount"
-        :disabled="loading"
-      />
-    </div>
-    <button class="btn" :disabled="loading">Добавить операцию</button>
-  </form>
+        <input
+          type="number"
+          id="amount"
+          placeholder="Введите сумму"
+          v-model="amount"
+          :disabled="loading"
+        />
+      </div>
+      <button class="button" :disabled="loading">Добавить операцию</button>
+    </form>
+  </div>
 </template>
 <script setup>
 import { inject, ref, watch } from 'vue'
@@ -53,3 +53,6 @@ watch(loading, (newValue) => {
   }
 })
 </script>
+<style scoped lang="scss">
+@use '@/assets/scss/components/AddTransaction';
+</style>

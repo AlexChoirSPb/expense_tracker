@@ -6,12 +6,10 @@ const apiKey = import.meta.env.VITE_API_KEY_FIREBASE
 const axiosApiInstance = axios.create()
 
 axiosApiInstance.interceptors.request.use((config) => {
-  if (!config.url.includes('signInWithPassword') && !config.url.includes('signUp')) {
-    const authStore = useAuthStore()
-    let params = new URLSearchParams()
-    params.append('auth', authStore.userInfo.token)
-    config.params = params
-  }
+  const authStore = useAuthStore()
+  let params = new URLSearchParams()
+  params.append('auth', authStore.userInfo.token)
+  config.params = params
   return config
 })
 
@@ -40,10 +38,12 @@ axiosApiInstance.interceptors.response.use(
         localStorage.removeItem('userInfo')
         router.push('/auth')
         authStore.userInfo = null
-        console.log(e)
+        const errorMessage =
+          e.response?.data?.error?.message ||
+          'Произошла ошибка отправки запроса. Требуется повторная авторизация'
+        throw new Error(errorMessage)
       }
     }
-    console.log(error)
   },
 )
 

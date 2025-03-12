@@ -1,0 +1,48 @@
+.transaction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  &--income {
+    border-left: 5px solid #2ecc71;
+  }
+
+  &--expense {
+    border-left: 5px solid #c0392b;
+  }
+
+  // .transaction__text
+  &__text {
+    margin-left: 6px;
+  }
+
+  // .transaction__wrapper
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  // .transaction__actions
+  &__actions {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #fff;
+    position: absolute;
+    right: 25px;
+  }
+
+  // .transaction__actions-list
+  &__actions-list {
+    list-style: none;
+  }
+
+  // .transaction__actions-item
+  &__actions-item {
+    padding: 8px 0;
+    &:not(:last-child) {
+      border-bottom: 1px solid #ddd;
+    }
+  }
+}
