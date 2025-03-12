@@ -1,0 +1,36 @@
+.inc-exp {
+  width: 100%;
+  display: flex;
+  padding: 20px;
+  background-color: #fff;
+  margin-bottom: 16px;
+
+  // .inc-exp__item
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    &:first-child {
+      border-right: 1px solid #bbb;
+    }
+  }
+
+  // .inc-exp__title
+  &__title {
+    text-transform: uppercase;
+  }
+
+  // .inc-exp__value
+  &__value {
+    &--income {
+      color: #2ecc71;
+    }
+
+    &--expense {
+      color: #c0392b;
+    }
+  }
+}

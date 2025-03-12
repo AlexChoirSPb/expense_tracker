@@ -1,0 +1,21 @@
+.transactions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  // .transactions__title
+  &__title {
+  }
+
+  // .transactions__list
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  // .transactions__list-item
+  &__list-item {
+  }
+}

@@ -12,27 +12,39 @@ const toast = useToast()
 
 const isSignIn = ref(true)
 const loading = ref(false)
+
 const changeSignMethod = () => {
   isSignIn.value = !isSignIn.value
 }
 
 async function userAuth(userData) {
   loading.value = true
-  if (isSignIn.value) {
-    await authStore.signin(userData)
-  } else {
-    await authStore.signup(userData)
+  let successMessage = ''
+  try {
+    if (isSignIn.value) {
+      await authStore.signin(userData)
+      successMessage = 'Успешно авторизовались!'
+    } else {
+      await authStore.signup(userData)
+      successMessage = 'Успешно зарегистрировались!'
+    }
+    router.replace('/')
+    toast.success(successMessage, { timeout: 2000 })
+  } catch (error) {
+    toast.error(`${error}`, { timeout: 3000 })
+  } finally {
+    loading.value = false
   }
-  loading.value = false
-  router.replace('/')
-  toast.success('Успешно авторизовались!', { timeout: 2000 })
 }
+
 provide('sign', { isSignIn, changeSignMethod, loading })
 </script>
 
 <template>
-  <AuthHeader />
-  <div class="container">
-    <component :is="isSignIn ? SignInForm : SignUpForm" @submitForm="userAuth"></component>
+  <div class="page">
+    <AuthHeader />
+    <div class="content">
+      <component :is="isSignIn ? SignInForm : SignUpForm" @submitForm="userAuth"></component>
+    </div>
   </div>
 </template>

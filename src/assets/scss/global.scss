@@ -1,0 +1,60 @@
+@use '@/assets/scss/fonts';
+@use '@/assets/scss/utils';
+@use '@/assets/scss/layout';
+@use '@/assets/scss/typography';
+@use '@/assets/scss/components/TheHeader';
+@use '@/assets/scss/ui/BaseInput';
+@use '@/assets/scss/ui/BaseButton';
+@use '@/assets/scss/ui/TextButton';
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+button,
+input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  background-color: #f7f7f7;
+  height: 100vh;
+  margin: 0;
+  font-size: 18px;
+}
+
+form {
+  width: 100%;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='password'] {
+  border: 1px solid #dedede;
+  border-radius: 2px;
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
