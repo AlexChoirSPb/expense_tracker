@@ -15,6 +15,23 @@
   // .transaction__text
   &__text {
     margin-left: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  // .transaction__category
+  &__category {
+    color: #9c88ff;
+    font-size: 10px;
+    line-height: 1;
+    padding: 4px;
+    border: 1px solid #9c88ff;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: 16px;
+    text-transform: uppercase;
   }
 
   // .transaction__wrapper
@@ -26,11 +43,13 @@
 
   // .transaction__actions
   &__actions {
-    padding: 8px;
+    padding: 0px 8px;
     border-radius: 4px;
     background-color: #fff;
     position: absolute;
     right: 25px;
+    top: -40px;
+    z-index: 5;
   }
 
   // .transaction__actions-list

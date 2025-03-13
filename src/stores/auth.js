@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { signinApi, signupApi } from '@/api/authApi'
-import { getName, setName } from '@/api/expenseApi'
+import { getNameApi, setNameApi } from '@/api/expenseApi'
 
 export const useAuthStore = defineStore('auth', () => {
   const userInfo = ref(JSON.parse(localStorage.getItem('userInfo')) || null)
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
         refreshToken: data.refreshToken,
       }
 
-      const userName = await getName(data.localId)
+      const userName = await getNameApi(data.localId)
       userInfo.value.name = userName
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo.value))
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
         refreshToken: data.refreshToken,
       }
 
-      await setName(data.localId, userName)
+      await setNameApi(data.localId, userName)
       userInfo.value.name = userName
       localStorage.setItem('userInfo', JSON.stringify(userInfo.value))
     } catch (error) {

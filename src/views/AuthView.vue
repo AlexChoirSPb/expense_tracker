@@ -18,9 +18,10 @@ const changeSignMethod = () => {
 }
 
 async function userAuth(userData) {
-  loading.value = true
-  let successMessage = ''
   try {
+    loading.value = true
+    let successMessage = ''
+
     if (isSignIn.value) {
       await authStore.signin(userData)
       successMessage = 'Успешно авторизовались!'

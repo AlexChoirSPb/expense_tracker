@@ -1,11 +1,11 @@
-.add-transaction {
+.control-transaction {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 16px;
 
-  // .add-transaction__form
+  // .control-transaction__form
   &__form {
     display: flex;
     flex-direction: column;

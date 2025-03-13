@@ -3,24 +3,35 @@
     class="transaction"
     :class="transaction.amount > 0 ? 'transaction--income' : 'transaction--expense'"
   >
-    <span class="transaction__text text">{{ transaction.text }}</span>
+    <span class="transaction__text text"
+      >{{ transaction.text }}
+      <span class="transaction__category" v-if="transaction.category">
+        {{ transaction.category }}</span
+      ></span
+    >
     <div class="transaction__wrapper">
       <span class="transaction__amount">{{ transaction.amount }} &#8381;</span>
       <button class="text-button" @click="isMenuOpen = !isMenuOpen">
         <span class="material-symbols-outlined"> more_vert </span>
       </button>
     </div>
-    <div class="transaction__actions" v-if="isMenuOpen">
+    <div class="transaction__actions" v-show="isMenuOpen">
       <ul class="transaction__actions-list">
         <li class="transaction__actions-item text">
           <button class="text-button" @click="deleteTransaction(transaction.id)">Удалить</button>
+        </li>
+        <li class="transaction__actions-item text">
+          <button class="text-button" @click="editTransaction(transaction.id)">
+            Редактировать
+          </button>
         </li>
       </ul>
     </div>
   </li>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+const { openModal } = inject('modal')
 
 defineProps({
   transaction: {
@@ -36,6 +47,11 @@ const isMenuOpen = ref(false)
 function deleteTransaction(id) {
   isMenuOpen.value = false
   emits('deleteTransaction', id)
+}
+
+function editTransaction(id) {
+  isMenuOpen.value = false
+  openModal('edit', id)
 }
 </script>
 <style scoped lang="scss">

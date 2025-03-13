@@ -1,14 +1,20 @@
-<script setup lang="ts">
-import axiosApiInstance from '@/api/axios'
-import AddTransaction from '@/components/AddTransaction.vue'
+<script setup>
+import {
+  addTransactionApi,
+  deleteTransactionApi,
+  editTransactionApi,
+  getTransactionsApi,
+} from '@/api/expenseApi'
 import AppHeader from '@/components/AppHeader.vue'
 import IncomeExpense from '@/components/IncomeExpense.vue'
+import TheModal from '@/components/TheModal.vue'
 import TotalBalance from '@/components/TotalBalance.vue'
 import TransactionList from '@/components/TransactionList.vue'
-import generateUUID from '@/helpers/uuidGenerate'
 import { useAuthStore } from '@/stores/auth.js'
 import { computed, onMounted, provide, ref } from 'vue'
 import { useToast } from 'vue-toastification'
+import ControlTransaction from '@/components/ControlTransaction.vue'
+import { useModal } from '@/composables/useModal'
 
 const toast = useToast()
 const authStore = useAuthStore()
@@ -16,6 +22,10 @@ const authStore = useAuthStore()
 const transactionList = ref([])
 
 const loading = ref(false)
+
+const { showModal, isEdit, editTransactionData, openModal, closeModal } = useModal(transactionList)
+
+provide('modal', { closeModal, openModal, showModal })
 
 provide('loading', { loading })
 
@@ -45,40 +55,57 @@ const expenseTotal = computed(() => {
     .toFixed(2)
 })
 
-async function addTransaction(payload) {
-  loading.value = true
-  const transactionId = generateUUID()
-  await axiosApiInstance.put(
-    `https://expense-tracker-3e6e2-default-rtdb.europe-west1.firebasedatabase.app/${authStore.userInfo.userId}/transactions/${transactionId}.json`,
-    {
-      ...payload,
-    },
-  )
-  payload.id = transactionId
-  transactionList.value.push(payload)
-  toast.success('Запись добавлена!', { timeout: 2000 })
-  loading.value = false
+async function controlTransaction(payload) {
+  try {
+    loading.value = true
+    let successMessage = ''
+    if (isEdit.value) {
+      const transactionId = editTransactionData.value.id
+      await editTransactionApi(authStore.userInfo.userId, transactionId, payload)
+      payload.id = transactionId
+
+      const index = transactionList.value.findIndex(
+        (transaction) => transaction.id == transactionId,
+      )
+
+      transactionList.value[index] = payload
+      successMessage = 'Запись обновлена!'
+    } else {
+      const transactionId = await addTransactionApi(authStore.userInfo.userId, payload)
+      payload.id = transactionId
+      transactionList.value.push(payload)
+      successMessage = 'Запись добавлена!'
+    }
+    toast.success(successMessage, { timeout: 2000 })
+    closeModal()
+  } catch (error) {
+    toast.error(`${error}`, { timeout: 3000 })
+  } finally {
+    loading.value = false
+  }
 }
 
 async function deleteTransaction(id) {
-  await axiosApiInstance.delete(
-    `https://expense-tracker-3e6e2-default-rtdb.europe-west1.firebasedatabase.app/${authStore.userInfo.userId}/transactions/${id}.json`,
-  )
-  transactionList.value = transactionList.value.filter((transaction) => transaction.id !== id)
+  try {
+    loading.value = true
+    await deleteTransactionApi(authStore.userInfo.userId, id)
+    transactionList.value = transactionList.value.filter((transaction) => transaction.id !== id)
+    toast.success('Запись удалена!', { timeout: 2000 })
+  } catch (error) {
+    toast.error(`${error}`, { timeout: 3000 })
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(async () => {
-  let response = await axiosApiInstance.get(
-    `https://expense-tracker-3e6e2-default-rtdb.europe-west1.firebasedatabase.app/${authStore.userInfo.userId}/transactions.json`,
-  )
-  if (response.data) {
-    Object.keys(response.data).forEach((key) => {
-      let data = {
-        id: key,
-        ...response.data[key],
-      }
-      transactionList.value.push(data)
-    })
+  try {
+    loading.value = true
+    transactionList.value = await getTransactionsApi(authStore.userInfo.userId)
+  } catch (error) {
+    toast.error(`${error}`, { timeout: 3000 })
+  } finally {
+    loading.value = false
   }
 })
 </script>
@@ -89,10 +116,17 @@ onMounted(async () => {
     <div class="content">
       <TotalBalance :total="+total" />
       <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
-      <AddTransaction @addTransaction="addTransaction" />
       <div class="scrollable-content">
         <TransactionList :transactions="transactionList" @deleteTransaction="deleteTransaction" />
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <TheModal v-if="showModal" :title="isEdit ? 'Редактировать операцию' : 'Добавить операцию'">
+      <ControlTransaction
+        @controlTransaction="controlTransaction"
+        :transactionData="editTransactionData"
+      />
+    </TheModal>
+  </Teleport>
 </template>

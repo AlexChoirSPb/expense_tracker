@@ -1,6 +1,9 @@
 <template>
   <div class="transactions">
-    <h3 class="transactions__title">История</h3>
+    <div class="transactions__header">
+      <h3 class="transactions__title">История</h3>
+      <button class="text-button" @click="openModal('add')">Добавить операцию</button>
+    </div>
     <TransitionGroup name="list" tag="ul" class="transactions__list" v-if="transactions.length > 0">
       <TransactionItem
         class="transactions__list-item"
@@ -15,6 +18,7 @@
 </template>
 <script setup>
 import TransactionItem from './TransactionItem.vue'
+import { inject } from 'vue'
 
 defineProps({
   transactions: {
@@ -22,6 +26,8 @@ defineProps({
     required: true,
   },
 })
+const { openModal } = inject('modal')
+
 const emits = defineEmits(['deleteTransaction'])
 
 function deleteTransaction(id) {
