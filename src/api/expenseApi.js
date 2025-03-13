@@ -100,6 +100,45 @@ export async function editTransactionApi(userId, id, payload) {
   }
 }
 
-// export async function getCategoriesApi(userId) {}
+export async function getCategoriesApi(userId) {
+  try {
+    let response = await axiosApiInstance.get(
+      `https://expense-tracker-3e6e2-default-rtdb.europe-west1.firebasedatabase.app/${userId}/categories.json`,
+    )
 
-// export async function addCategoryApi(userId) {}
+    const categoryList = []
+
+    if (response.data) {
+      Object.keys(response.data).forEach((key) => {
+        let data = {
+          id: key,
+          ...response.data[key],
+        }
+        categoryList.push(data)
+      })
+    }
+
+    return categoryList
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error?.message || 'Произошла ошибка при получении категорий'
+    throw new Error(errorMessage)
+  }
+}
+
+export async function addCategoryApi(userId, payload) {
+  try {
+    const categoryId = generateUUID()
+    await axiosApiInstance.put(
+      `https://expense-tracker-3e6e2-default-rtdb.europe-west1.firebasedatabase.app/${userId}/categories/${categoryId}.json`,
+      {
+        ...payload,
+      },
+    )
+    return categoryId
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error?.message || 'Произошла ошибка при сохранении категории'
+    throw new Error(errorMessage)
+  }
+}

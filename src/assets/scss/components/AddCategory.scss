@@ -1,0 +1,14 @@
+.add-category {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  // .add-category__form
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

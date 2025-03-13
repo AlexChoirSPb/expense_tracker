@@ -1,8 +1,10 @@
 <script setup>
 import {
+  addCategoryApi,
   addTransactionApi,
   deleteTransactionApi,
   editTransactionApi,
+  getCategoriesApi,
   getTransactionsApi,
 } from '@/api/expenseApi'
 import AppHeader from '@/components/AppHeader.vue'
@@ -15,19 +17,77 @@ import { computed, onMounted, provide, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import ControlTransaction from '@/components/ControlTransaction.vue'
 import { useModal } from '@/composables/useModal'
+import AddCategory from '@/components/AddCategory.vue'
 
 const toast = useToast()
 const authStore = useAuthStore()
 
 const transactionList = ref([])
+const categories = ref([])
 
 const loading = ref(false)
 
-const { showModal, isEdit, editTransactionData, openModal, closeModal } = useModal(transactionList)
+const {
+  showModal,
+  isEdit,
+  editTransactionData,
+  openModal,
+  closeModal,
+  showCategoryModal,
+  openCategoryModal,
+  closeCategoryModal,
+} = useModal(transactionList)
 
-provide('modal', { closeModal, openModal, showModal })
+provide('modal', {
+  closeModal,
+  openModal,
+  showModal,
+  showCategoryModal,
+  openCategoryModal,
+  closeCategoryModal,
+})
 
 provide('loading', { loading })
+
+const categoryFilter = ref('no')
+
+const categoryFilterTransactionList = computed(() => {
+  if (categoryFilter.value == 'no') {
+    return transactionList.value
+  } else if (categoryFilter.value == '') {
+    return transactionList.value.filter(
+      (transaction) => transaction.category == categoryFilter.value,
+    )
+  } else {
+    return transactionList.value.filter(
+      (transaction) =>
+        transaction.category == categories.value.find((i) => i.id == categoryFilter.value).category,
+    )
+  }
+})
+
+const dateFilterTransactionList = computed(() => {
+  const dateFilterTransactionListObject = categoryFilterTransactionList.value.reduce(
+    (acc, transaction) => {
+      const { date } = transaction
+      if (!acc[date]) {
+        acc[date] = []
+      }
+      acc[date].push(transaction)
+
+      return acc
+    },
+    {},
+  )
+
+  const sortedEntries = Object.entries(dateFilterTransactionListObject).sort((a, b) => {
+    return new Date(b[0]) - new Date(a[0])
+  })
+
+  // Преобразуем отсортированный массив обратно в объект (если нужно)
+  const sortedData = Object.fromEntries(sortedEntries)
+  return sortedData
+})
 
 const total = computed(() => {
   return transactionList.value
@@ -98,10 +158,27 @@ async function deleteTransaction(id) {
   }
 }
 
+async function addCategory(payload) {
+  try {
+    loading.value = true
+    const categoryId = await addCategoryApi(authStore.userInfo.userId, payload)
+    payload.id = categoryId
+    categories.value.push(payload)
+    toast.success('Категория сохранена!', { timeout: 2000 })
+    closeCategoryModal()
+  } catch (error) {
+    toast.error(`${error}`, { timeout: 3000 })
+  } finally {
+    loading.value = false
+  }
+}
+
 onMounted(async () => {
   try {
     loading.value = true
     transactionList.value = await getTransactionsApi(authStore.userInfo.userId)
+    categories.value = await getCategoriesApi(authStore.userInfo.userId)
+    console.log(transactionList.value)
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
@@ -117,16 +194,29 @@ onMounted(async () => {
       <TotalBalance :total="+total" />
       <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
       <div class="scrollable-content">
-        <TransactionList :transactions="transactionList" @deleteTransaction="deleteTransaction" />
+        <TransactionList
+          :dateFilterTransactions="dateFilterTransactionList"
+          :categories="categories"
+          @deleteTransaction="deleteTransaction"
+          v-model="categoryFilter"
+        />
       </div>
     </div>
   </div>
   <Teleport to="body">
-    <TheModal v-if="showModal" :title="isEdit ? 'Редактировать операцию' : 'Добавить операцию'">
+    <TheModal
+      v-if="showModal"
+      :title="isEdit ? 'Редактировать операцию' : 'Добавить операцию'"
+      @closeModal="closeModal"
+    >
       <ControlTransaction
         @controlTransaction="controlTransaction"
         :transactionData="editTransactionData"
+        :categories="categories"
       />
+    </TheModal>
+    <TheModal v-if="showCategoryModal" title="Добавить категорию" @closeModal="closeCategoryModal">
+      <AddCategory :categories="categories" @addCategory="addCategory"></AddCategory>
     </TheModal>
   </Teleport>
 </template>

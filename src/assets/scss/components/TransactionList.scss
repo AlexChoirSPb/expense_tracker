@@ -18,7 +18,13 @@
     gap: 8px;
   }
 
-  // .transactions__list-item
-  &__list-item {
+  // .transactions__list-date
+  &__list-date {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #bbb;
+
+    &:not(:first-child) {
+      margin-top: 16px;
+    }
   }
 }
