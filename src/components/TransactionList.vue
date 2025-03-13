@@ -1,7 +1,7 @@
 <template>
   <div class="transactions">
     <div class="transactions__header">
-      <h3 class="transactions__title">История</h3>
+      <h2 class="transactions__title">История</h2>
       <button class="text-button" @click="openModal('add')">Добавить операцию</button>
     </div>
     <div class="form-control form-control--row" v-if="categories.length > 0">

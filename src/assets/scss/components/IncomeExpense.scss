@@ -1,7 +1,7 @@
 .inc-exp {
   width: 100%;
   display: flex;
-  padding: 20px;
+  padding: 20px 0;
   background-color: #fff;
   margin-bottom: 16px;
   box-shadow:
@@ -24,6 +24,10 @@
   // .inc-exp__title
   &__title {
     text-transform: uppercase;
+    font-size: 20px;
+    @media (max-width: 720px) {
+      font-size: 18px;
+    }
   }
 
   // .inc-exp__value

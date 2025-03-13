@@ -10,6 +10,10 @@
   letter-spacing: 2px;
   padding: 10px;
   transition: all 0.3s ease;
+  font-weight: 500;
+  @media (max-width: 720px) {
+    font-size: 14px;
+  }
 
   &:hover {
     background-color: #856dfd;

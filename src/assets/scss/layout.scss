@@ -27,4 +27,16 @@
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #856dfd;
+  }
 }

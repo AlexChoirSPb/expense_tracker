@@ -3,28 +3,47 @@ h1,
   letter-spacing: 1px;
   font-size: 36px;
   font-weight: 700;
+
+  @media (max-width: 720px) {
+    font-size: 28px;
+  }
 }
 h2,
 .h2 {
   font-size: 28px;
   letter-spacing: 1px;
   font-weight: 500;
+
+  @media (max-width: 720px) {
+    font-size: 24px;
+  }
 }
 h3,
 .h3 {
   font-size: 24px;
   letter-spacing: 1px;
   font-weight: 500;
+
+  @media (max-width: 720px) {
+    font-size: 20px;
+  }
 }
 h4,
 .h4 {
   font-size: 20px;
   letter-spacing: 1px;
   font-weight: 500;
+
+  @media (max-width: 720px) {
+    font-size: 18px;
+  }
 }
 p,
 .text {
   font-size: 18px;
+  @media (max-width: 720px) {
+    font-size: 16px;
+  }
 }
 
 .text--center {
@@ -47,4 +66,7 @@ p,
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
   transition: all 0.3s ease;
+  @media (max-width: 720px) {
+    font-size: 18px;
+  }
 }

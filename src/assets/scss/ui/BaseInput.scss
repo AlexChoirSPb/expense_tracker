@@ -24,6 +24,10 @@
 
     &--tiny {
       font-weight: 400;
+      font-size: 16px;
+      @media (max-width: 720px) {
+        font-size: 14px;
+      }
     }
   }
 
@@ -31,5 +35,8 @@
   &__description {
     color: #bbb;
     font-size: 13px;
+    @media (max-width: 720px) {
+      font-size: 12px;
+    }
   }
 }

@@ -5,7 +5,7 @@ const { isSignIn, changeSignMethod, loading } = inject('sign')
 </script>
 <template>
   <header class="header">
-    <h1>{{ isSignIn ? 'Авторизация' : 'Регистрация' }}</h1>
+    <h1 class="header__title">{{ isSignIn ? 'Авторизация' : 'Регистрация' }}</h1>
     <div class="header__actions">
       <span>{{ isSignIn ? 'Нет аккаунта?' : 'Уже есть аккаунт?' }}</span>
       <button class="text-button" @click="changeSignMethod" :disabled="loading">

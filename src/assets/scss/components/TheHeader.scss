@@ -2,6 +2,14 @@
   padding-bottom: 16px;
   border-bottom: 1px solid #bbb;
 
+  // .header__title
+  &__title {
+    margin-bottom: 16px;
+    @media (max-width: 720px) {
+      margin-bottom: 12px;
+    }
+  }
+
   // .header__actions
   &__actions {
     display: flex;

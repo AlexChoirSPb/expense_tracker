@@ -7,6 +7,10 @@
   transition: all 0.3s ease;
   cursor: pointer;
 
+  @media (max-width: 720px) {
+    font-size: 14px;
+  }
+
   &:hover {
     color: #856dfd;
   }

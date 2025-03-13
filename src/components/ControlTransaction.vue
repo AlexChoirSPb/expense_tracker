@@ -88,6 +88,10 @@ function submitForm() {
     toast.error('Поле "Сумма" не может быть пустым')
     return
   }
+  if (amount.value > 10000000 || amount.value < -10000000) {
+    toast.error('Кажется сумма слишком большая:)')
+    return
+  }
   const transactionData = {
     text: text.value,
     amount: amount.value,
