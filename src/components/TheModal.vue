@@ -1,11 +1,11 @@
 <template>
   <div class="modal">
-    <div class="modal__bg" @click="closeModal"></div>
+    <div class="modal__bg" @click="emit('closeModal')"></div>
     <div class="modal__wrapper">
       <div class="modal__body">
         <div class="modal__header">
           <h3 class="modal__title">{{ title }}</h3>
-          <button class="text-button" @click="closeModal">
+          <button class="text-button" @click="emit('closeModal')">
             <span class="material-symbols-outlined"> close </span>
           </button>
         </div>
@@ -17,15 +17,13 @@
   </div>
 </template>
 <script setup>
-import { inject } from 'vue'
-
 defineProps({
   title: {
     type: String,
   },
 })
 
-const { closeModal } = inject('modal')
+const emit = defineEmits(['closeModal'])
 </script>
 <style scoped lang="scss">
 @use '@/assets/scss/components/TheModal';

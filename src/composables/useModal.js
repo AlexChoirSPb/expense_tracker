@@ -14,5 +14,23 @@ export function useModal(transactionList) {
     showModal.value = false
   }
 
-  return { showModal, isEdit, editTransactionData, openModal, closeModal }
+  const showCategoryModal = ref(false)
+
+  function openCategoryModal() {
+    showCategoryModal.value = true
+  }
+  function closeCategoryModal() {
+    showCategoryModal.value = false
+  }
+
+  return {
+    showModal,
+    isEdit,
+    editTransactionData,
+    openModal,
+    closeModal,
+    showCategoryModal,
+    openCategoryModal,
+    closeCategoryModal,
+  }
 }
