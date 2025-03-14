@@ -5,22 +5,17 @@
       <button class="text-button" @click="openModal('add')">Добавить операцию</button>
     </div>
     <div class="form-control form-control--row" v-if="categories.length > 0">
-      <label class="form-control__label form-control__label--tiny" for="category">
+      <label
+        class="transactions__filter-label form-control__label form-control__label--tiny"
+        for="category"
+      >
         Фильтр по катерогии:
       </label>
-      <select
-        class="small"
-        name="category"
-        id="category"
-        v-model="categoryFilter"
-        :disabled="loading"
-      >
-        <option value="no">Без фильтра</option>
-        <option value="">Без категории</option>
-        <option v-for="category in categories" :key="category.id" :value="category.id">
-          {{ category.category }}
-        </option>
-      </select>
+      <FilterSelect
+        class="transactions__filter-select"
+        @updateFilterValue="updateFilterValue"
+        :list="categories"
+      ></FilterSelect>
     </div>
     <TransitionGroup
       name="list"
@@ -48,6 +43,7 @@
 import { formatDate } from '@/helpers/dateFormatter'
 import TransactionItem from './TransactionItem.vue'
 import { inject } from 'vue'
+import FilterSelect from './FilterSelect.vue'
 
 defineProps({
   dateFilterTransactions: {
@@ -60,13 +56,16 @@ defineProps({
   },
 })
 const { openModal } = inject('modal')
-const { loading } = inject('loading')
 
 const emits = defineEmits(['deleteTransaction'])
 const categoryFilter = defineModel()
 
 function deleteTransaction(id) {
   emits('deleteTransaction', id)
+}
+
+function updateFilterValue(id) {
+  categoryFilter.value = id
 }
 </script>
 <style scoped lang="scss">

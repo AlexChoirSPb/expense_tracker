@@ -33,19 +33,12 @@
           <label class="form-control__label" for="category"> Категория </label>
           <button class="text-button" @click.prevent="openCategoryModal">Добавить категорию</button>
         </div>
-
-        <select
-          name="category"
-          id="category"
-          v-model="category"
-          :disabled="loading"
+        <FilterSelect
           v-if="categories.length > 0"
-        >
-          <option value="">Выберите категорию</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id">
-            {{ category.category }}
-          </option>
-        </select>
+          :initCategoryId="category"
+          @updateFilterValue="updateFilterValue"
+          :list="categories"
+        ></FilterSelect>
         <div class="text text--center" v-else>Вы пока не создали ни одну категорию.</div>
       </div>
       <button class="button" :disabled="loading">Сохранить</button>
@@ -56,6 +49,7 @@
 import { getCurrentDate } from '@/helpers/dateFormatter'
 import { inject, ref } from 'vue'
 import { useToast } from 'vue-toastification'
+import FilterSelect from './FilterSelect.vue'
 
 const toast = useToast()
 const { loading } = inject('loading')
@@ -96,9 +90,13 @@ function submitForm() {
     text: text.value,
     amount: amount.value,
     date: date.value,
-    category: props.categories.find((i) => i.id == category.value).category,
+    category: props.categories.find((i) => i.id == category.value)?.category ?? '',
   }
   emits('controlTransaction', transactionData)
+}
+
+function updateFilterValue(id) {
+  category.value = id
 }
 </script>
 <style scoped lang="scss">

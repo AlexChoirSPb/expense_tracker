@@ -28,4 +28,14 @@
       margin-top: 16px;
     }
   }
+
+  // .transactions__filter-label
+  &__filter-label {
+    max-width: 100px;
+  }
+
+  // .transactions__filter-select
+  &__filter-select {
+    flex: 1;
+  }
 }

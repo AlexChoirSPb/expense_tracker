@@ -11,11 +11,11 @@
     >
     <div class="transaction__wrapper">
       <span class="transaction__amount">{{ transaction.amount }} &#8381;</span>
-      <button class="text-button" @click="isMenuOpen = !isMenuOpen">
+      <button class="text-button open-menu" @click="isMenuOpen = !isMenuOpen">
         <span class="material-symbols-outlined"> more_vert </span>
       </button>
     </div>
-    <div class="transaction__actions" v-show="isMenuOpen">
+    <div class="transaction__actions" v-show="isMenuOpen" ref="menuRef">
       <ul class="transaction__actions-list">
         <li class="transaction__actions-item text">
           <button class="text-button" @click="deleteTransaction(transaction.id)">Удалить</button>
@@ -30,7 +30,9 @@
   </li>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, useTemplateRef } from 'vue'
+import { onClickOutside } from '@vueuse/core'
+
 const { openModal } = inject('modal')
 
 defineProps({
@@ -43,6 +45,13 @@ defineProps({
 const emits = defineEmits(['deleteTransaction'])
 
 const isMenuOpen = ref(false)
+const menuRef = useTemplateRef('menuRef')
+
+onClickOutside(menuRef, (event) => {
+  if (!event.target.closest('.open-menu')) {
+    isMenuOpen.value = false
+  }
+})
 
 function deleteTransaction(id) {
   isMenuOpen.value = false
