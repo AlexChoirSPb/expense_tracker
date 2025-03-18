@@ -42,10 +42,8 @@ provide('sign', { isSignIn, changeSignMethod, loading })
 </script>
 
 <template>
-  <div class="page">
-    <AuthHeader />
-    <div class="content">
-      <component :is="isSignIn ? SignInForm : SignUpForm" @submitForm="userAuth"></component>
-    </div>
+  <AuthHeader />
+  <div class="content">
+    <component :is="isSignIn ? SignInForm : SignUpForm" @submitForm="userAuth"></component>
   </div>
 </template>

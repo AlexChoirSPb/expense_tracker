@@ -1,10 +1,13 @@
 <script setup>
 import { validateEmail, validatePassword } from '@/helpers/validators'
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+
 import { useToast } from 'vue-toastification'
+import LoaderIcon from './icons/LoaderIcon.vue'
 
 const toast = useToast()
 const emit = defineEmits(['submitForm'])
+const { loading } = inject('sign')
 
 const email = ref('')
 const password = ref('')
@@ -45,13 +48,14 @@ function signUp() {
 <template>
   <form class="auth-form" @submit.prevent="signUp">
     <div class="form-control">
-      <label class="form-control__label" for="login">Email</label>
+      <label class="form-control__label" for="login">Почта</label>
       <input
         type="text"
         id="login"
         placeholder="Введите email"
         autocomplete="email"
         v-model="email"
+        :disabled="loading"
       />
     </div>
     <div class="form-control">
@@ -62,6 +66,7 @@ function signUp() {
         placeholder="Введите пароль"
         autocomplete="new-password"
         v-model="password"
+        :disabled="loading"
       />
     </div>
     <div class="form-control">
@@ -72,6 +77,7 @@ function signUp() {
         placeholder="Повторите пароль"
         autocomplete="new-password"
         v-model="repeatPassword"
+        :disabled="loading"
       />
     </div>
     <div class="form-control">
@@ -82,9 +88,12 @@ function signUp() {
         placeholder="Как вас зовут?"
         autocomplete="name"
         v-model="name"
+        :disabled="loading"
       />
     </div>
-    <button class="button">Зарегистрироваться</button>
+    <button class="button" :disabled="loading">
+      Зарегистрироваться <LoaderIcon v-if="loading" />
+    </button>
   </form>
 </template>
 <style scoped lang="scss">

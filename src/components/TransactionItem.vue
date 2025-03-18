@@ -15,7 +15,12 @@
         <span class="material-symbols-outlined"> more_vert </span>
       </button>
     </div>
-    <div class="transaction__actions" v-show="isMenuOpen" ref="menuRef">
+    <div
+      v-if="screenType == 'desktop'"
+      class="transaction__actions"
+      v-show="isMenuOpen"
+      ref="menuRef"
+    >
       <ul class="transaction__actions-list">
         <li class="transaction__actions-item text">
           <button class="text-button" @click="deleteTransaction(transaction.id)">Удалить</button>
@@ -27,13 +32,43 @@
         </li>
       </ul>
     </div>
+    <Transition name="modal" v-else>
+      <Teleport to="body">
+        <TheModal v-show="isMenuOpen" @closeModal="isMenuOpen = !isMenuOpen" position="bottom">
+          <div class="transaction__actions">
+            <ul class="transaction__actions-list">
+              <li class="transaction__actions-item">
+                <button
+                  class="text-button transaction__actions-button"
+                  @click="deleteTransaction(transaction.id)"
+                >
+                  Удалить
+                </button>
+              </li>
+              <li class="transaction__actions-item">
+                <button
+                  class="text-button transaction__actions-button"
+                  @click="editTransaction(transaction.id)"
+                >
+                  Редактировать
+                </button>
+              </li>
+            </ul>
+          </div>
+        </TheModal>
+      </Teleport>
+    </Transition>
   </li>
 </template>
 <script setup>
 import { ref, inject, useTemplateRef } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { useScreenType } from '@/composables/useScreenType'
+import TheModal from './TheModal.vue'
 
 const { openModal } = inject('modal')
+
+const { screenType } = useScreenType()
 
 defineProps({
   transaction: {

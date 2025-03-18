@@ -1,11 +1,12 @@
 <script setup>
 import { validateEmail, validatePassword } from '@/helpers/validators'
 import { inject, ref } from 'vue'
-const { loading } = inject('sign')
 import { useToast } from 'vue-toastification'
+import LoaderIcon from './icons/LoaderIcon.vue'
 
 const toast = useToast()
 const emit = defineEmits(['submitForm'])
+const { loading } = inject('sign')
 
 const email = ref('')
 const password = ref('')
@@ -33,7 +34,10 @@ function signIn() {
 <template>
   <form class="auth-form" @submit.prevent="signIn">
     <div class="form-control">
-      <label class="form-control__label" for="login">Почта</label>
+      <div class="form-control__label-inner">
+        <label class="form-control__label" for="login"> Почта </label>
+        <span class="material-symbols-outlined" v-tippy="'test@test.com'"> info </span>
+      </div>
       <input
         type="text"
         id="login"
@@ -44,7 +48,10 @@ function signIn() {
       />
     </div>
     <div class="form-control">
-      <label class="form-control__label" for="password">Пароль</label>
+      <div class="form-control__label-inner">
+        <label class="form-control__label" for="login"> Пароль </label>
+        <span class="material-symbols-outlined" v-tippy="'Qwert1234'"> info </span>
+      </div>
       <input
         type="password"
         id="password"
@@ -54,7 +61,7 @@ function signIn() {
         :disabled="loading"
       />
     </div>
-    <button class="button" :disabled="loading">Войти</button>
+    <button class="button" :disabled="loading">Войти <LoaderIcon v-if="loading" /></button>
   </form>
 </template>
 <style scoped lang="scss">

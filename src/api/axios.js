@@ -34,6 +34,7 @@ axiosApiInstance.interceptors.response.use(
         authStore.userInfo.token = data.id_token
         authStore.userInfo.refreshToken = data.refresh_token
         localStorage.setItem('userInfo', JSON.stringify(authStore.userInfo))
+        return axiosApiInstance(originalRequest)
       } catch (e) {
         localStorage.removeItem('userInfo')
         router.push('/auth')

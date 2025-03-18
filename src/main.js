@@ -4,6 +4,8 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
 import Toast from 'vue-toastification'
+import VueTippy from 'vue-tippy'
+import 'tippy.js/dist/tippy.css'
 import 'vue-toastification/dist/index.css'
 
 import './api/axios'
@@ -26,5 +28,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(Toast)
+app.use(VueTippy)
 
 app.mount('#app')

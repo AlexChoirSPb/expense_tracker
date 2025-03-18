@@ -178,7 +178,6 @@ onMounted(async () => {
     loading.value = true
     transactionList.value = await getTransactionsApi(authStore.userInfo.userId)
     categories.value = await getCategoriesApi(authStore.userInfo.userId)
-    console.log(transactionList.value)
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
@@ -188,35 +187,65 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page">
-    <AppHeader />
-    <div class="content">
-      <TotalBalance :total="+total" />
-      <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
-      <div class="scrollable-content">
-        <TransactionList
-          :dateFilterTransactions="dateFilterTransactionList"
-          :categories="categories"
-          @deleteTransaction="deleteTransaction"
-          v-model="categoryFilter"
-        />
-      </div>
+  <AppHeader />
+  <div class="content">
+    <TotalBalance :total="+total" />
+    <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
+    <div class="scrollable-content">
+      <TransactionList
+        :dateFilterTransactions="dateFilterTransactionList"
+        :categories="categories"
+        @deleteTransaction="deleteTransaction"
+        v-model="categoryFilter"
+      />
     </div>
   </div>
   <Teleport to="body">
-    <TheModal
-      v-if="showModal"
-      :title="isEdit ? 'Редактировать операцию' : 'Добавить операцию'"
-      @closeModal="closeModal"
-    >
-      <ControlTransaction
-        @controlTransaction="controlTransaction"
-        :transactionData="editTransactionData"
-        :categories="categories"
-      />
-    </TheModal>
-    <TheModal v-if="showCategoryModal" title="Добавить категорию" @closeModal="closeCategoryModal">
-      <AddCategory :categories="categories" @addCategory="addCategory"></AddCategory>
-    </TheModal>
+    <Transition name="modal">
+      <TheModal
+        v-if="showModal"
+        :title="isEdit ? 'Редактировать операцию' : 'Добавить операцию'"
+        @closeModal="closeModal"
+      >
+        <ControlTransaction
+          @controlTransaction="controlTransaction"
+          :transactionData="editTransactionData"
+          :categories="categories"
+        />
+      </TheModal>
+    </Transition>
+    <Transition name="modal">
+      <TheModal
+        v-if="showCategoryModal"
+        title="Добавить категорию"
+        @closeModal="closeCategoryModal"
+      >
+        <AddCategory :categories="categories" @addCategory="addCategory"></AddCategory>
+      </TheModal>
+    </Transition>
   </Teleport>
 </template>
+<style lang="scss">
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.5s ease;
+
+  .modal__bg {
+    transition: opacity 0.3s ease;
+  }
+  .modal__body {
+    transition: all 0.5s ease;
+  }
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  .modal__bg {
+    opacity: 0;
+  }
+  .modal__body {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+</style>

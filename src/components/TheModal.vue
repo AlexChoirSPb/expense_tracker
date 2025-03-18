@@ -1,9 +1,9 @@
 <template>
-  <div class="modal">
+  <div class="modal" :class="{ 'modal--bottom': position == 'bottom' }">
     <div class="modal__bg" @click="emit('closeModal')"></div>
     <div class="modal__wrapper">
       <div class="modal__body">
-        <div class="modal__header">
+        <div class="modal__header" v-if="position !== 'bottom'">
           <h3 class="modal__title">{{ title }}</h3>
           <button class="text-button" @click="emit('closeModal')">
             <span class="material-symbols-outlined"> close </span>
@@ -19,6 +19,9 @@
 <script setup>
 defineProps({
   title: {
+    type: String,
+  },
+  position: {
     type: String,
   },
 })

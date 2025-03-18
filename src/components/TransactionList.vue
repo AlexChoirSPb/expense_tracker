@@ -17,26 +17,28 @@
         :list="categories"
       ></FilterSelect>
     </div>
-    <TransitionGroup
-      name="list"
-      tag="ul"
-      class="transactions__list"
-      v-if="Object.keys(dateFilterTransactions).length > 0"
-    >
-      <template v-for="(transitionDateGroup, date) in dateFilterTransactions" :key="date">
-        <li class="transactions__list-date">
-          <h4>{{ formatDate(date) }}</h4>
-        </li>
-        <TransactionItem
-          class="transactions__list-item"
-          v-for="transaction in transitionDateGroup"
-          :key="transaction.id"
-          :transaction="transaction"
-          @deleteTransaction="deleteTransaction"
-        ></TransactionItem>
-      </template>
-    </TransitionGroup>
-    <div class="text" v-else>Записей пока нет!</div>
+    <Transition name="fade" mode="out-in">
+      <TransitionGroup
+        name="list"
+        tag="ul"
+        class="transactions__list"
+        v-if="Object.keys(dateFilterTransactions).length > 0"
+      >
+        <template v-for="(transitionDateGroup, date) in dateFilterTransactions" :key="date">
+          <li class="transactions__list-date">
+            <h4>{{ formatDate(date) }}</h4>
+          </li>
+          <TransactionItem
+            class="transactions__list-item"
+            v-for="transaction in transitionDateGroup"
+            :key="transaction.id"
+            :transaction="transaction"
+            @deleteTransaction="deleteTransaction"
+          ></TransactionItem>
+        </template>
+      </TransitionGroup>
+      <div class="text" v-else>Записей пока нет!</div>
+    </Transition>
   </div>
 </template>
 <script setup>
@@ -79,5 +81,15 @@ function updateFilterValue(id) {
 .list-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
