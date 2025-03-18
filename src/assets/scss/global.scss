@@ -46,7 +46,9 @@ ul {
 
 body {
   background-color: #f7f7f7;
-  height: 100vh;
+  height: -moz-available; /* WebKit-based browsers will ignore this. */
+  height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+  height: fill-available;
   margin: 0;
   font-size: 18px;
   @media (max-width: 720px) {

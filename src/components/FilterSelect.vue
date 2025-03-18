@@ -7,7 +7,7 @@
       @input="filterHandler"
       @click="openList = true"
       placeholder="Поиск категории"
-      :disabled="loading"
+      :disabled="loadingTransaction"
     />
     <div class="custom-select__list-inner" ref="listRef" v-show="openList">
       <ul class="custom-select__list">
@@ -36,7 +36,7 @@
 <script setup>
 import { computed, ref, useTemplateRef, inject } from 'vue'
 import { onClickOutside } from '@vueuse/core'
-const { loading } = inject('loading')
+const { loadingTransaction } = inject('loading')
 
 const emits = defineEmits(['updateFilterValue'])
 const props = defineProps({

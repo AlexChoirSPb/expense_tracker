@@ -8,10 +8,10 @@
           id="text"
           placeholder="Введите название категории"
           v-model="category"
-          :disabled="loading"
+          :disabled="loadingCategory"
         />
       </div>
-      <button class="button" :disabled="loading">Сохранить</button>
+      <button class="button" :disabled="loadingCategory">Сохранить</button>
     </form>
   </div>
 </template>
@@ -20,7 +20,7 @@ import { inject, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
-const { loading } = inject('loading')
+const { loadingCategory } = inject('loading')
 const props = defineProps({
   categories: {
     type: Array,

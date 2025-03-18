@@ -18,6 +18,7 @@ import { useToast } from 'vue-toastification'
 import ControlTransaction from '@/components/ControlTransaction.vue'
 import { useModal } from '@/composables/useModal'
 import AddCategory from '@/components/AddCategory.vue'
+import LoaderIcon from '@/components/icons/LoaderIcon.vue'
 
 const toast = useToast()
 const authStore = useAuthStore()
@@ -25,7 +26,9 @@ const authStore = useAuthStore()
 const transactionList = ref([])
 const categories = ref([])
 
-const loading = ref(false)
+const loadingList = ref(true)
+const loadingTransaction = ref(false)
+const loadingCategory = ref(false)
 
 const {
   showModal,
@@ -47,7 +50,7 @@ provide('modal', {
   closeCategoryModal,
 })
 
-provide('loading', { loading })
+provide('loading', { loadingList, loadingTransaction, loadingCategory })
 
 const categoryFilter = ref('no')
 
@@ -117,7 +120,7 @@ const expenseTotal = computed(() => {
 
 async function controlTransaction(payload) {
   try {
-    loading.value = true
+    loadingTransaction.value = true
     let successMessage = ''
     if (isEdit.value) {
       const transactionId = editTransactionData.value.id
@@ -141,26 +144,26 @@ async function controlTransaction(payload) {
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
-    loading.value = false
+    loadingTransaction.value = false
   }
 }
 
 async function deleteTransaction(id) {
   try {
-    loading.value = true
+    loadingTransaction.value = true
     await deleteTransactionApi(authStore.userInfo.userId, id)
     transactionList.value = transactionList.value.filter((transaction) => transaction.id !== id)
     toast.success('Запись удалена!', { timeout: 2000 })
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
-    loading.value = false
+    loadingTransaction.value = false
   }
 }
 
 async function addCategory(payload) {
   try {
-    loading.value = true
+    loadingCategory.value = true
     const categoryId = await addCategoryApi(authStore.userInfo.userId, payload)
     payload.id = categoryId
     categories.value.push(payload)
@@ -169,19 +172,19 @@ async function addCategory(payload) {
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
-    loading.value = false
+    loadingCategory.value = false
   }
 }
 
 onMounted(async () => {
   try {
-    loading.value = true
+    loadingList.value = true
     transactionList.value = await getTransactionsApi(authStore.userInfo.userId)
     categories.value = await getCategoriesApi(authStore.userInfo.userId)
   } catch (error) {
     toast.error(`${error}`, { timeout: 3000 })
   } finally {
-    loading.value = false
+    loadingList.value = false
   }
 })
 </script>
@@ -191,7 +194,8 @@ onMounted(async () => {
   <div class="content">
     <TotalBalance :total="+total" />
     <IncomeExpense :income="+incomeTotal" :expense="+expenseTotal" />
-    <div class="scrollable-content">
+    <LoaderIcon type="big" v-if="loadingList" />
+    <div v-else class="scrollable-content">
       <TransactionList
         :dateFilterTransactions="dateFilterTransactionList"
         :categories="categories"

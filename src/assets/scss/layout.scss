@@ -5,7 +5,9 @@
 .page {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 100% высоты экрана */
+  height: -moz-available; /* WebKit-based browsers will ignore this. */
+  height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+  height: fill-available;
   margin: 0px auto;
   max-width: 460px;
   width: 100%;

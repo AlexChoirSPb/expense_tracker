@@ -8,7 +8,7 @@
           id="text"
           placeholder="Введите описание операции"
           v-model="text"
-          :disabled="loading"
+          :disabled="loadingTransaction"
         />
       </div>
       <div class="form-control">
@@ -21,12 +21,18 @@
           id="amount"
           placeholder="Введите сумму"
           v-model="amount"
-          :disabled="loading"
+          :disabled="loadingTransaction"
         />
       </div>
       <div class="form-control">
         <label class="form-control__label" for="date"> Дата </label>
-        <input type="date" id="date" v-model="date" :disabled="loading" :max="getCurrentDate()" />
+        <input
+          type="date"
+          id="date"
+          v-model="date"
+          :disabled="loadingTransaction"
+          :max="getCurrentDate()"
+        />
       </div>
       <div class="form-control">
         <div class="form-control__label-inner">
@@ -41,7 +47,7 @@
         ></FilterSelect>
         <div class="text text--center" v-else>Вы пока не создали ни одну категорию.</div>
       </div>
-      <button class="button" :disabled="loading">Сохранить</button>
+      <button class="button" :disabled="loadingTransaction">Сохранить</button>
     </form>
   </div>
 </template>
@@ -52,7 +58,7 @@ import { useToast } from 'vue-toastification'
 import FilterSelect from './FilterSelect.vue'
 
 const toast = useToast()
-const { loading } = inject('loading')
+const { loadingTransaction } = inject('loading')
 const { openCategoryModal } = inject('modal')
 
 const props = defineProps({

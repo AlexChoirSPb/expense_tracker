@@ -1,8 +1,15 @@
 <template>
-  <span class="loader-icon">
+  <span class="loader-icon" :class="{ 'loader-icon--big': type == 'big' }">
     <span class="material-symbols-outlined"> progress_activity </span>
   </span>
 </template>
+<script setup>
+defineProps({
+  type: {
+    type: String,
+  },
+})
+</script>
 <style scoped lang="scss">
 .loader-icon {
   display: flex;
@@ -10,6 +17,12 @@
   justify-content: center;
   color: #856dfd;
   animation: spin 1s linear infinite;
+
+  &--big {
+    .material-symbols-outlined {
+      font-size: 50px;
+    }
+  }
 }
 
 @keyframes spin {

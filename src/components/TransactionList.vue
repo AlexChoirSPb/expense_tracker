@@ -1,21 +1,23 @@
 <template>
   <div class="transactions">
-    <div class="transactions__header">
-      <h2 class="transactions__title">История</h2>
-      <button class="text-button" @click="openModal('add')">Добавить операцию</button>
-    </div>
-    <div class="form-control form-control--row" v-if="categories.length > 0">
-      <label
-        class="transactions__filter-label form-control__label form-control__label--tiny"
-        for="category"
-      >
-        Фильтр по катерогии:
-      </label>
-      <FilterSelect
-        class="transactions__filter-select"
-        @updateFilterValue="updateFilterValue"
-        :list="categories"
-      ></FilterSelect>
+    <div class="transactions__inner">
+      <div class="transactions__header">
+        <h2 class="transactions__title">История</h2>
+        <button class="text-button" @click="openModal('add')">Добавить операцию</button>
+      </div>
+      <div class="form-control form-control--row" v-if="categories.length > 0">
+        <label
+          class="transactions__filter-label form-control__label form-control__label--tiny"
+          for="category"
+        >
+          Фильтр по катерогии:
+        </label>
+        <FilterSelect
+          class="transactions__filter-select"
+          @updateFilterValue="updateFilterValue"
+          :list="categories"
+        ></FilterSelect>
+      </div>
     </div>
     <Transition name="fade" mode="out-in">
       <TransitionGroup
